@@ -1,14 +1,13 @@
 import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card'
-import { Input } from './components/ui/input'
-import { Button } from './components/ui/button'
 import { fetchProductData, processProductData, formatPrice, getStockStatus, getRatingStars, isValidProductUrl, extractDomainFromUrl } from './utils/productService'
+import ProductPage from './components/ProductPage'
 
 function App() {
   const [productUrl, setProductUrl] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [productData, setProductData] = useState(null)
   const [error, setError] = useState('')
+  const [currentPage, setCurrentPage] = useState('analyzer') // 'analyzer' or 'product'
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -44,41 +43,78 @@ function App() {
     }
   }
 
-  return (
-    <div className="container">
-      <div className="max-width">
-        {/* Header Card */}
-        <div className="card mb-6">
-          <div className="card-header">
-            <h1 className="card-title">Product URL Analyzer</h1>
-            <p className="card-description">
-              Paste a product URL below to analyze product details
-            </p>
-          </div>
-          <div className="card-content">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="form-group">
-                <input
-                  type="url"
-                  placeholder="https://example.com/product"
-                  value={productUrl}
-                  onChange={(e) => setProductUrl(e.target.value)}
-                  className="form-input"
-                />
-                {error && (
-                  <p className="error-message">{error}</p>
-                )}
-              </div>
-              <button 
-                type="submit" 
-                className="btn btn-primary"
-                disabled={!productUrl.trim() || isLoading}
-              >
-                {isLoading ? 'Analyzing...' : 'Analyze Product'}
-              </button>
-            </form>
-          </div>
+  // Navigation component
+  const Navigation = () => (
+    <nav className="navigation">
+      <div className="nav-container">
+        <div className="nav-brand">
+          <h2>Product AI</h2>
         </div>
+        <div className="nav-links">
+          <button 
+            className={`nav-link ${currentPage === 'analyzer' ? 'active' : ''}`}
+            onClick={() => setCurrentPage('analyzer')}
+          >
+            URL Analyzer
+          </button>
+          <button 
+            className={`nav-link ${currentPage === 'product' ? 'active' : ''}`}
+            onClick={() => setCurrentPage('product')}
+          >
+            Product Page
+          </button>
+        </div>
+      </div>
+    </nav>
+  )
+
+  // Render ProductPage if currentPage is 'product'
+  if (currentPage === 'product') {
+    return (
+      <>
+        <Navigation />
+        <ProductPage />
+      </>
+    )
+  }
+
+  return (
+    <>
+      <Navigation />
+      <div className="container">
+        <div className="max-width">
+          {/* Header Card */}
+          <div className="card mb-6">
+            <div className="card-header">
+              <h1 className="card-title">Product URL Analyzer</h1>
+              <p className="card-description">
+                Paste a product URL below to analyze product details
+              </p>
+            </div>
+            <div className="card-content">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="form-group">
+                  <input
+                    type="url"
+                    placeholder="https://example.com/product"
+                    value={productUrl}
+                    onChange={(e) => setProductUrl(e.target.value)}
+                    className="form-input"
+                  />
+                  {error && (
+                    <p className="error-message">{error}</p>
+                  )}
+                </div>
+                <button 
+                  type="submit" 
+                  className="btn btn-primary"
+                  disabled={!productUrl.trim() || isLoading}
+                >
+                  {isLoading ? 'Analyzing...' : 'Analyze Product'}
+                </button>
+              </form>
+            </div>
+          </div>
 
         {/* Product Data Display */}
         {productData && (
@@ -189,8 +225,9 @@ function App() {
             </div>
           </div>
         )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
