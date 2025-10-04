@@ -1,0 +1,128 @@
+{
+  "id": "prod_123456",
+  "title": "Premium Wireless Bluetooth Headphones",
+  "brand": "AudioTech",
+  "price": {
+    "current": 199.99,
+    "original": 249.99,
+    "currency": "USD",
+    "discount_percentage": 20
+  },
+  "description": "Experience crystal-clear audio with our premium wireless Bluetooth headphones. Featuring active noise cancellation, 30-hour battery life, and premium comfort for all-day listening. Perfect for music lovers, professionals, and travelers.",
+  "short_description": "Premium wireless headphones with noise cancellation and 30-hour battery life.",
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
+      "alt": "Wireless headphones front view",
+      "is_primary": true
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800",
+      "alt": "Wireless headphones side view",
+      "is_primary": false
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800",
+      "alt": "Wireless headphones in case",
+      "is_primary": false
+    }
+  ],
+  "variants": [
+    {
+      "id": "var_001",
+      "name": "Black",
+      "color": "#000000",
+      "price": 199.99,
+      "in_stock": true,
+      "stock_quantity": 45
+    },
+    {
+      "id": "var_002", 
+      "name": "White",
+      "color": "#FFFFFF",
+      "price": 199.99,
+      "in_stock": true,
+      "stock_quantity": 32
+    },
+    {
+      "id": "var_003",
+      "name": "Silver",
+      "color": "#C0C0C0",
+      "price": 219.99,
+      "in_stock": false,
+      "stock_quantity": 0
+    }
+  ],
+  "specifications": {
+    "battery_life": "30 hours",
+    "charging_time": "2 hours",
+    "connectivity": "Bluetooth 5.0",
+    "noise_cancellation": "Active",
+    "driver_size": "40mm",
+    "frequency_response": "20Hz - 20kHz",
+    "impedance": "32 ohms",
+    "weight": "250g"
+  },
+  "features": [
+    "Active Noise Cancellation",
+    "30-hour battery life",
+    "Quick charge (5 min = 3 hours)",
+    "Premium comfort padding",
+    "Foldable design",
+    "Voice assistant support",
+    "Multi-device pairing"
+  ],
+  "reviews": {
+    "average_rating": 4.6,
+    "total_reviews": 1247,
+    "rating_distribution": {
+      "5": 892,
+      "4": 234,
+      "3": 89,
+      "2": 23,
+      "1": 9
+    },
+    "recent_reviews": [
+      {
+        "id": "rev_001",
+        "user_name": "Sarah M.",
+        "rating": 5,
+        "title": "Amazing sound quality!",
+        "comment": "These headphones exceeded my expectations. The noise cancellation is incredible and the battery life is exactly as advertised. Highly recommend!",
+        "date": "2024-01-15",
+        "verified_purchase": true
+      },
+      {
+        "id": "rev_002",
+        "user_name": "Mike R.",
+        "rating": 4,
+        "title": "Great headphones with minor issues",
+        "comment": "Sound quality is excellent and the build quality feels premium. The only downside is that they can get a bit warm during long listening sessions.",
+        "date": "2024-01-12",
+        "verified_purchase": true
+      },
+      {
+        "id": "rev_003",
+        "user_name": "Jennifer L.",
+        "rating": 5,
+        "title": "Perfect for travel",
+        "comment": "Used these on a 12-hour flight and they were perfect. Comfortable, great noise cancellation, and the battery lasted the entire trip.",
+        "date": "2024-01-10",
+        "verified_purchase": true
+      }
+    ]
+  },
+  "availability": {
+    "in_stock": true,
+    "stock_quantity": 77,
+    "shipping_info": {
+      "free_shipping": true,
+      "estimated_delivery": "2-3 business days",
+      "shipping_cost": 0
+    }
+  },
+  "category": "Electronics > Audio > Headphones",
+  "tags": ["wireless", "bluetooth", "noise-cancellation", "premium", "audio"],
+  "created_at": "2023-12-01T10:00:00Z",
+  "updated_at": "2024-01-15T14:30:00Z"
+}
