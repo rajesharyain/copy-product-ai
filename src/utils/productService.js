@@ -204,3 +204,126 @@ export const extractDomainFromUrl = (url) => {
     return 'Unknown';
   }
 };
+
+/**
+ * Generates AI-enhanced sales copy for a product
+ * @param {Object} productData - The product data object
+ * @returns {Object} Generated sales copy with headline, description, benefits, and CTA
+ */
+export const generateSalesCopy = (productData) => {
+  if (!productData) {
+    return {
+      headline: "Premium Product",
+      description: "Experience the difference with our premium product.",
+      benefits: [
+        "High-quality materials",
+        "Excellent customer service",
+        "Great value for money"
+      ],
+      callToAction: "Order now and experience the difference!"
+    };
+  }
+
+  // Extract key product information
+  const { title, brand, price, features, reviews, availability } = productData;
+  const isOnSale = price.current < price.original;
+  const discountPercentage = price.discount_percentage;
+  const averageRating = reviews.average_rating;
+  const totalReviews = reviews.total_reviews;
+  const stockQuantity = availability.stock_quantity;
+
+  // Generate compelling headline
+  const headline = generateHeadline(title, brand, isOnSale, discountPercentage);
+
+  // Generate persuasive description
+  const description = generateDescription(title, brand, features, averageRating, totalReviews);
+
+  // Generate 3 key benefits
+  const benefits = generateBenefits(features, price, availability);
+
+  // Generate call-to-action
+  const callToAction = generateCallToAction(isOnSale, stockQuantity, price);
+
+  return {
+    headline,
+    description,
+    benefits,
+    callToAction
+  };
+};
+
+/**
+ * Generates a compelling headline
+ */
+const generateHeadline = (title, brand, isOnSale, discountPercentage) => {
+  const headlines = [
+    `${brand} ${title} - Premium Quality at Unbeatable Price`,
+    `Transform Your Experience with ${brand} ${title}`,
+    `The ${brand} ${title} That Everyone's Talking About`,
+    `Premium ${brand} ${title} - Now Available`,
+    `Experience Excellence with ${brand} ${title}`
+  ];
+
+  if (isOnSale && discountPercentage >= 20) {
+    return `${brand} ${title} - ${discountPercentage}% OFF Limited Time Offer!`;
+  }
+
+  return headlines[Math.floor(Math.random() * headlines.length)];
+};
+
+/**
+ * Generates persuasive product description
+ */
+const generateDescription = (title, brand, features, averageRating, totalReviews) => {
+  const topFeatures = features.slice(0, 3);
+  const featureText = topFeatures.join(', ');
+  
+  return `Discover the ${brand} ${title} - a premium product designed for excellence. With ${featureText}, this product delivers outstanding performance and reliability. Rated ${averageRating} stars by ${totalReviews} satisfied customers, it's the perfect choice for those who demand quality and innovation. Experience the difference that ${brand} brings to your daily routine.`;
+};
+
+/**
+ * Generates 3 key benefits
+ */
+const generateBenefits = (features, price, availability) => {
+  const benefits = [];
+  
+  // Benefit 1: Key feature
+  if (features.length > 0) {
+    benefits.push(`✨ ${features[0]} - Experience superior performance`);
+  }
+  
+  // Benefit 2: Value proposition
+  const isOnSale = price.current < price.original;
+  if (isOnSale) {
+    benefits.push(`💰 Amazing Value - Save ${price.discount_percentage}% on this premium product`);
+  } else {
+    benefits.push(`💰 Excellent Value - Premium quality at a competitive price`);
+  }
+  
+  // Benefit 3: Trust/Convenience
+  if (availability.shipping_info.free_shipping) {
+    benefits.push(`🚚 Free Shipping - Get it delivered to your door at no extra cost`);
+  } else {
+    benefits.push(`🔒 Secure Purchase - 30-day money-back guarantee included`);
+  }
+  
+  return benefits;
+};
+
+/**
+ * Generates persuasive call-to-action
+ */
+const generateCallToAction = (isOnSale, stockQuantity, price) => {
+  const urgency = stockQuantity <= 10 ? "Only " + stockQuantity + " left in stock! " : "";
+  const saleUrgency = isOnSale ? "Limited time offer! " : "";
+  
+  const ctas = [
+    `${urgency}${saleUrgency}Order now and transform your experience today!`,
+    `${urgency}${saleUrgency}Don't miss out - secure yours before they're gone!`,
+    `${urgency}${saleUrgency}Join thousands of satisfied customers - order now!`,
+    `${urgency}${saleUrgency}Experience the difference - click to order now!`,
+    `${urgency}${saleUrgency}Get yours today and see why everyone loves this product!`
+  ];
+  
+  return ctas[Math.floor(Math.random() * ctas.length)];
+};

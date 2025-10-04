@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { fetchProductData, processProductData, formatPrice, getStockStatus, getRatingStars, isValidProductUrl, extractDomainFromUrl } from './utils/productService'
+import { fetchProductData, processProductData, formatPrice, getStockStatus, getRatingStars, isValidProductUrl, extractDomainFromUrl, generateSalesCopy } from './utils/productService'
 import ProductPage from './components/ProductPage'
 
 function App() {
   const [productUrl, setProductUrl] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [productData, setProductData] = useState(null)
+  const [salesCopy, setSalesCopy] = useState(null)
   const [error, setError] = useState('')
   const [currentPage, setCurrentPage] = useState('analyzer') // 'analyzer' or 'product'
 
@@ -32,7 +33,13 @@ function App() {
       if (result.success) {
         const processedData = processProductData(result.data)
         setProductData(processedData)
+        
+        // Generate AI-enhanced sales copy
+        const generatedCopy = generateSalesCopy(result.data)
+        setSalesCopy(generatedCopy)
+        
         console.log('Product data loaded:', processedData)
+        console.log('Sales copy generated:', generatedCopy)
       } else {
         setError(result.error || 'Failed to load product data')
       }
@@ -220,6 +227,58 @@ function App() {
                       ))}
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Sales Copy Display */}
+        {salesCopy && (
+          <div className="card mt-6">
+            <div className="card-header">
+              <h2 className="card-title">AI-Generated Sales Copy</h2>
+              <p className="card-description">
+                AI-enhanced marketing content for this product
+              </p>
+            </div>
+            <div className="card-content">
+              <div className="space-y-6">
+                {/* Headline */}
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Headline:</h3>
+                  <p className="text-lg font-medium text-blue-600 bg-blue-50 p-3 rounded-lg">
+                    {salesCopy.headline}
+                  </p>
+                </div>
+
+                {/* Description */}
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Sales Description:</h3>
+                  <p className="text-gray-700 leading-relaxed bg-gray-50 p-3 rounded-lg">
+                    {salesCopy.description}
+                  </p>
+                </div>
+
+                {/* Benefits */}
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Key Benefits:</h3>
+                  <ul className="space-y-2">
+                    {salesCopy.benefits.map((benefit, index) => (
+                      <li key={index} className="flex items-start gap-2 bg-green-50 p-3 rounded-lg">
+                        <span className="text-green-600 mt-1">✓</span>
+                        <span className="text-gray-700">{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Call to Action */}
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Call to Action:</h3>
+                  <p className="text-lg font-semibold text-orange-600 bg-orange-50 p-3 rounded-lg">
+                    {salesCopy.callToAction}
+                  </p>
                 </div>
               </div>
             </div>
