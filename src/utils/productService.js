@@ -6,20 +6,48 @@ import productData from '../data/product.json';
  */
 
 /**
- * Fetches product data from the mock JSON file
+ * Fetches product data from the backend scraping API
+ * @param {string} url - Product URL to scrape
  * @returns {Promise<Object>} Product data object
  */
-export const fetchProductData = async () => {
+export const fetchProductData = async (url = null) => {
   try {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // If no URL provided, return mock data for testing
+    if (!url) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return {
+        success: true,
+        data: productData,
+        error: null
+      };
+    }
+
+    // Call the backend scraping API
+    const backendUrl = 'http://localhost:3001/scrape';
+    const response = await fetch(`${backendUrl}?url=${encodeURIComponent(url)}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
     
+    if (!result.success) {
+      throw new Error(result.error || 'Failed to scrape product data');
+    }
+
     return {
       success: true,
-      data: productData,
+      data: result.data,
       error: null
     };
   } catch (error) {
+    console.error('Error fetching product data:', error);
     return {
       success: false,
       data: null,

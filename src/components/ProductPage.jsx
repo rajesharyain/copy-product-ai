@@ -1,17 +1,37 @@
-import { useState } from 'react'
-import productData from '../data/product.json'
+import { useState, useEffect } from 'react'
 import { formatPrice, getRatingStars } from '../utils/productService'
 
-const ProductPage = () => {
-  const [selectedVariant, setSelectedVariant] = useState(productData.variants[0])
+const ProductPage = ({ productData }) => {
+  const [selectedVariant, setSelectedVariant] = useState(null)
   const [quantity, setQuantity] = useState(1)
+
+  useEffect(() => {
+    if (productData && productData.variants && productData.variants.length > 0) {
+      setSelectedVariant(productData.variants[0])
+    }
+  }, [productData])
 
   const handleAddToCart = () => {
     alert(`Added ${quantity} ${selectedVariant.name} ${productData.title} to cart!`)
   }
 
   const handleBuyNow = () => {
-    alert(`Proceeding to checkout with ${quantity} ${selectedVariant.name} ${productData.title}!`)
+    alert(`Proceeding to checkout with ${quantity} ${selectedVariant?.name} ${productData?.title}!`)
+  }
+
+  // Handle loading and error states
+  if (!productData) {
+    return (
+      <div className="container">
+        <div className="max-width">
+          <div className="card">
+            <div className="card-content">
+              <p>No product data available. Please analyze a product URL first.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -21,23 +41,23 @@ const ProductPage = () => {
         <div className="hero-container">
           <div className="hero-content">
             <div className="hero-text">
-              <h1 className="hero-title">{productData.title}</h1>
-              <p className="hero-subtitle">{productData.short_description}</p>
+              <h1 className="hero-title">{productData.title || 'Product Title'}</h1>
+              <p className="hero-subtitle">{productData.short_description || productData.description || 'Product description'}</p>
               
               {/* Rating */}
               <div className="hero-rating">
-                <span className="rating-stars">{getRatingStars(productData.reviews.average_rating)}</span>
+                <span className="rating-stars">{getRatingStars(productData.reviews?.average_rating || 0)}</span>
                 <span className="rating-text">
-                  {productData.reviews.average_rating} ({productData.reviews.total_reviews} reviews)
+                  {productData.reviews?.average_rating || 0} ({productData.reviews?.total_reviews || 0} reviews)
                 </span>
               </div>
 
               {/* Price */}
               <div className="hero-price">
                 <span className="current-price">
-                  {formatPrice(productData.price.current, productData.price.currency)}
+                  {formatPrice(productData.price?.current || 0, productData.price?.currency || 'USD')}
                 </span>
-                {productData.price.current < productData.price.original && (
+                {productData.price?.current < productData.price?.original && (
                   <>
                     <span className="original-price">
                       {formatPrice(productData.price.original, productData.price.currency)}
@@ -53,10 +73,10 @@ const ProductPage = () => {
               <div className="variant-selection">
                 <h3>Choose Color:</h3>
                 <div className="variant-options">
-                  {productData.variants.map((variant) => (
+                  {(productData.variants || []).map((variant) => (
                     <button
                       key={variant.id}
-                      className={`variant-btn ${selectedVariant.id === variant.id ? 'selected' : ''} ${!variant.in_stock ? 'disabled' : ''}`}
+                      className={`variant-btn ${selectedVariant?.id === variant.id ? 'selected' : ''} ${!variant.in_stock ? 'disabled' : ''}`}
                       onClick={() => setSelectedVariant(variant)}
                       disabled={!variant.in_stock}
                     >
@@ -120,8 +140,8 @@ const ProductPage = () => {
 
             <div className="hero-image">
               <img 
-                src={productData.images[0].url} 
-                alt={productData.images[0].alt}
+                src={productData.images?.[0]?.url || 'https://via.placeholder.com/400x300?text=No+Image'} 
+                alt={productData.images?.[0]?.alt || productData.title || 'Product Image'}
                 className="main-product-image"
               />
             </div>
@@ -132,9 +152,9 @@ const ProductPage = () => {
       {/* Benefits Section */}
       <section className="benefits-section">
         <div className="benefits-container">
-          <h2 className="section-title">Why Choose {productData.brand}?</h2>
+          <h2 className="section-title">Why Choose {productData.brand || 'Our Product'}?</h2>
           <div className="benefits-grid">
-            {productData.features.map((feature, index) => (
+            {(productData.features || []).map((feature, index) => (
               <div key={index} className="benefit-item">
                 <div className="benefit-icon">
                   {index === 0 && '🎧'}

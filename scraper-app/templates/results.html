@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Page Generated Successfully!</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .main-container {
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.95);
+        }
+        .card-header {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border-radius: 20px 20px 0 0 !important;
+            padding: 2rem;
+        }
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            border: none;
+            border-radius: 15px;
+            padding: 15px 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+        .btn-outline-primary {
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 15px;
+            padding: 10px 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-primary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .product-preview {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .preview-iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .success-icon {
+            font-size: 4rem;
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+        .action-buttons {
+            background: rgba(255,255,255,0.8);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <!-- Success Card -->
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <div class="success-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h1 class="mb-3">Sales Page Generated Successfully!</h1>
+                            <p class="lead mb-0">Your compelling sales landing page is ready to convert visitors into customers!</p>
+                        </div>
+                        <div class="card-body p-5">
+                            <!-- Product Preview -->
+                            <div class="row mb-5">
+                                <div class="col-md-4">
+                                    <div class="product-preview">
+                                        <img src="{{ product_data.image }}" alt="{{ product_data.title }}" class="product-image">
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <h2 class="mb-3">{{ product_data.title }}</h2>
+                                    <div class="mb-3">
+                                        <span class="h3 text-success fw-bold">{{ product_data.price }}</span>
+                                    </div>
+                                    <p class="text-muted">{{ product_data.description[:200] }}{% if product_data.description|length > 200 %}...{% endif %}</p>
+                                    <div class="mb-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-link"></i> Source: {{ product_data.url }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Generated Sales Copy Preview -->
+                            <div class="row mb-5">
+                                <div class="col-12">
+                                    <h3 class="mb-4">
+                                        <i class="fas fa-magic text-primary"></i> Generated Sales Copy
+                                    </h3>
+                                    <div class="bg-light p-4 rounded-3">
+                                        <h4 class="text-primary mb-3">{{ sales_copy.headline }}</h4>
+                                        <p class="mb-3">{{ sales_copy.description }}</p>
+                                        <div class="mb-3">
+                                            <strong>Key Benefits:</strong>
+                                            <ul class="mt-2">
+                                                {% for benefit in sales_copy.benefits %}
+                                                <li>{{ benefit }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        <div class="text-center">
+                                            <span class="badge bg-warning text-dark fs-6">{{ sales_copy.call_to_action }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons text-center">
+                                <h4 class="mb-4">
+                                    <i class="fas fa-download text-primary"></i> Download Your Sales Page
+                                </h4>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <a href="{{ url_for('download_file', filename=filename) }}" class="btn btn-success btn-lg w-100">
+                                            <i class="fas fa-download"></i> Download HTML
+                                        </a>
+                                        <small class="text-muted d-block mt-2">Complete sales page file</small>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <a href="{{ url_for('preview_file', filename=filename) }}" target="_blank" class="btn btn-outline-primary btn-lg w-100">
+                                            <i class="fas fa-eye"></i> Preview Page
+                                        </a>
+                                        <small class="text-muted d-block mt-2">Open in new tab</small>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <a href="{{ url_for('index') }}" class="btn btn-outline-primary btn-lg w-100">
+                                            <i class="fas fa-plus"></i> Generate Another
+                                        </a>
+                                        <small class="text-muted d-block mt-2">Create more pages</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Live Preview -->
+                            <div class="mt-5">
+                                <h4 class="mb-4">
+                                    <i class="fas fa-desktop text-primary"></i> Live Preview
+                                </h4>
+                                <iframe src="{{ url_for('preview_file', filename=filename) }}" class="preview-iframe"></iframe>
+                            </div>
+
+                            <!-- Instructions -->
+                            <div class="mt-5 bg-info bg-opacity-10 p-4 rounded-3">
+                                <h5 class="text-info">
+                                    <i class="fas fa-info-circle"></i> How to Use Your Sales Page
+                                </h5>
+                                <ol class="mt-3">
+                                    <li><strong>Download:</strong> Click the "Download HTML" button to save the file</li>
+                                    <li><strong>Customize:</strong> Open the HTML file in any text editor to modify colors, text, or add your own branding</li>
+                                    <li><strong>Deploy:</strong> Upload to any web hosting service or use it in your marketing campaigns</li>
+                                    <li><strong>Track:</strong> Add Google Analytics or other tracking codes to monitor performance</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

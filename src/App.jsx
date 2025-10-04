@@ -8,7 +8,7 @@ function App() {
   const [productData, setProductData] = useState(null)
   const [salesCopy, setSalesCopy] = useState(null)
   const [error, setError] = useState('')
-  const [currentPage, setCurrentPage] = useState('analyzer') // 'analyzer' or 'product'
+  const [currentPage, setCurrentPage] = useState('analyzer') // 'analyzer', 'product', or 'scraper'
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -27,8 +27,8 @@ function App() {
     setError('')
     
     try {
-      // Simulate fetching product data based on URL
-      const result = await fetchProductData()
+      // Fetch product data from backend scraping API
+      const result = await fetchProductData(productUrl)
       
       if (result.success) {
         const processedData = processProductData(result.data)
@@ -70,6 +70,12 @@ function App() {
           >
             Product Page
           </button>
+          <button 
+            className={`nav-link ${currentPage === 'scraper' ? 'active' : ''}`}
+            onClick={() => setCurrentPage('scraper')}
+          >
+            Sales Page Generator
+          </button>
         </div>
       </div>
     </nav>
@@ -80,7 +86,37 @@ function App() {
     return (
       <>
         <Navigation />
-        <ProductPage />
+        <ProductPage productData={productData} />
+      </>
+    )
+  }
+
+  // Render Scraper iframe if currentPage is 'scraper'
+  if (currentPage === 'scraper') {
+    return (
+      <>
+        <Navigation />
+        <div className="container">
+          <div className="max-width">
+            <div className="card mb-6">
+              <div className="card-header">
+                <h1 className="card-title">Sales Page Generator</h1>
+                <p className="card-description">
+                  Generate compelling sales landing pages from any product URL
+                </p>
+              </div>
+              <div className="card-content">
+                <iframe 
+                  src="http://localhost:5000" 
+                  width="100%" 
+                  height="800" 
+                  style={{border: 'none', borderRadius: '10px'}}
+                  title="Sales Page Generator"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </>
     )
   }

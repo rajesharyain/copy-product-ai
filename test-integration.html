@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend-Backend Integration Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background-color: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Frontend-Backend Integration Test</h1>
+    
+    <div class="test-section">
+        <h3>1. Backend Health Check</h3>
+        <button onclick="testBackendHealth()">Test Backend</button>
+        <div id="backend-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. Product Scraping Test</h3>
+        <input type="text" id="test-url" placeholder="Enter product URL" value="https://example.com" style="width: 300px; padding: 5px;">
+        <button onclick="testScraping()">Test Scraping</button>
+        <div id="scraping-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. Frontend Integration Test</h3>
+        <button onclick="testFrontendIntegration()">Test Frontend</button>
+        <div id="frontend-result"></div>
+    </div>
+
+    <script>
+        async function testBackendHealth() {
+            const resultDiv = document.getElementById('backend-result');
+            try {
+                const response = await fetch('http://localhost:3001/health');
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <h4>✅ Backend is running!</h4>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Backend connection failed</h4>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testScraping() {
+            const resultDiv = document.getElementById('scraping-result');
+            const url = document.getElementById('test-url').value;
+            
+            if (!url) {
+                resultDiv.innerHTML = '<div class="error">Please enter a URL</div>';
+                return;
+            }
+            
+            try {
+                resultDiv.innerHTML = '<p>⏳ Scraping product data...</p>';
+                
+                const response = await fetch(`http://localhost:3001/scrape?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Scraping successful!</h4>
+                            <p><strong>Title:</strong> ${data.data.title}</p>
+                            <p><strong>Price:</strong> ${data.data.price?.current || 'N/A'}</p>
+                            <p><strong>Images:</strong> ${data.data.images?.length || 0} found</p>
+                            <p><strong>Reviews:</strong> ${data.data.reviews?.total_reviews || 0}</p>
+                            <details>
+                                <summary>Full Response</summary>
+                                <pre>${JSON.stringify(data, null, 2)}</pre>
+                            </details>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h4>❌ Scraping failed</h4>
+                            <p>Error: ${data.error}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Scraping request failed</h4>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testFrontendIntegration() {
+            const resultDiv = document.getElementById('frontend-result');
+            
+            try {
+                // Test if frontend is accessible
+                const response = await fetch('http://localhost:5173/');
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Frontend is running!</h4>
+                            <p>Frontend is accessible at <a href="http://localhost:5173/" target="_blank">http://localhost:5173/</a></p>
+                            <p>You can now test the full integration by:</p>
+                            <ol>
+                                <li>Opening the frontend application</li>
+                                <li>Entering a product URL in the analyzer</li>
+                                <li>Clicking "Analyze Product"</li>
+                                <li>Viewing the scraped data and generated sales copy</li>
+                                <li>Switching to "Product Page" to see the funnel layout</li>
+                            </ol>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h4>❌ Frontend not accessible</h4>
+                            <p>Status: ${response.status}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Frontend connection failed</h4>
+                        <p>Error: ${error.message}</p>
+                        <p>Make sure the frontend development server is running with: <code>npm run dev</code></p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Auto-run backend health check on page load
+        window.onload = function() {
+            testBackendHealth();
+        };
+    </script>
+</body>
+</html>
